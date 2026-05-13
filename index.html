@@ -234,10 +234,101 @@
   </style>
 </head>
 
-<body>
+<body style="display:none;">
 
   <div class="bg-glow bg1"></div>
   <div class="bg-glow bg2"></div>
+
+  <!-- Tela de Login Personalizada -->
+  <div id="login-screen" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #0D2B52 0%, #020617 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      font-family: 'Inter', sans-serif;
+  ">
+      <div style="width: 400px; text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px rgba(0,0,0,0.6);">
+          <div style="font-size: 50px; margin-bottom: 20px; filter: drop-shadow(0 0 10px #F06520);">🔑</div>
+          <h2 style="margin-bottom: 10px; font-size: 28px; color: white;">Acesso Restrito</h2>
+          <p style="opacity: 0.6; font-size: 16px; margin-bottom: 30px; color: white;">Acesse o portal de apresentações corporativas.</p>
+          
+          <input type="password" id="password-input" placeholder="Senha de acesso" style="
+              width: 100%;
+              padding: 15px;
+              background: rgba(255,255,255,0.05);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 12px;
+              color: white;
+              font-size: 18px;
+              text-align: center;
+              margin-bottom: 20px;
+              outline: none;
+              transition: border-color 0.3s;
+          ">
+          
+          <div id="error-message" style="color: #ff4444; font-size: 14px; margin-bottom: 20px; display: none;">Senha incorreta. Tente novamente.</div>
+          
+          <button onclick="checkPassword()" style="
+              width: 100%;
+              padding: 15px;
+              background: #F06520;
+              border: none;
+              border-radius: 12px;
+              color: white;
+              font-weight: 700;
+              font-size: 16px;
+              cursor: pointer;
+              transition: transform 0.2s, background 0.3s;
+          ">Entrar no Portal</button>
+      </div>
+  </div>
+
+  <script>
+      // Mostrar o corpo do documento imediatamente (a tela de login cobre tudo)
+      document.body.style.display = "block";
+
+      function checkPassword() {
+          const input = document.getElementById('password-input');
+          const error = document.getElementById('error-message');
+          
+          if (input.value === "century00") {
+              const login = document.getElementById('login-screen');
+              login.style.opacity = "0";
+              login.style.transition = "opacity 0.5s ease";
+              setTimeout(() => {
+                  login.style.display = "none";
+              }, 500);
+          } else {
+              error.style.display = "block";
+              input.style.borderColor = "#ff4444";
+              input.classList.add('shake');
+              setTimeout(() => input.classList.remove('shake'), 500);
+              input.value = "";
+              input.focus();
+          }
+      }
+
+      document.getElementById('password-input').addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') {
+              checkPassword();
+          }
+      });
+  </script>
+
+  <style>
+      @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-10px); }
+          75% { transform: translateX(10px); }
+      }
+      .shake { animation: shake 0.2s ease-in-out 0; animation-iteration-count: 2; }
+  </style>
 
   <div class="container">
 
