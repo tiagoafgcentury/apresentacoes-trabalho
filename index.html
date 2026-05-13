@@ -292,31 +292,39 @@
       </div>
   </div>
 
-  <script>
-      // Mostrar o corpo do documento imediatamente e focar no input
-      document.body.style.display = "block";
-      setTimeout(() => document.getElementById('password-input').focus(), 100);
+    <script>
+        // Sistema de Sessão Única (SSO)
+        (function() {
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                document.body.style.display = "block";
+                document.getElementById('login-screen').style.display = "none";
+            } else {
+                document.body.style.display = "block";
+                setTimeout(() => document.getElementById('password-input').focus(), 100);
+            }
+        })();
 
-      function checkPassword() {
-          const input = document.getElementById('password-input');
-          const error = document.getElementById('error-message');
-          
-          if (input.value === "century00") {
-              const login = document.getElementById('login-screen');
-              login.style.opacity = "0";
-              login.style.transition = "opacity 0.5s ease";
-              setTimeout(() => {
-                  login.style.display = "none";
-              }, 500);
-          } else {
-              error.style.display = "block";
-              input.style.borderColor = "#ff4444";
-              input.classList.add('shake');
-              setTimeout(() => input.classList.remove('shake'), 500);
-              input.value = "";
-              input.focus();
-          }
-      }
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const error = document.getElementById('error-message');
+            
+            if (input.value === "century00") {
+                sessionStorage.setItem('authenticated', 'true');
+                const login = document.getElementById('login-screen');
+                login.style.opacity = "0";
+                login.style.transition = "opacity 0.5s ease";
+                setTimeout(() => {
+                    login.style.display = "none";
+                }, 500);
+            } else {
+                error.style.display = "block";
+                input.style.borderColor = "#ff4444";
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+                input.value = "";
+                input.focus();
+            }
+        }
 
       document.getElementById('password-input').addEventListener('keypress', function (e) {
           if (e.key === 'Enter') {

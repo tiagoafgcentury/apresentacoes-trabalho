@@ -381,15 +381,27 @@
     </div>
 
     <script>
-        // Mostrar o corpo do documento imediatamente e focar no input
-        document.body.style.display = "block";
-        setTimeout(() => document.getElementById('password-input').focus(), 100);
+        // Sistema de Sessão Única (SSO)
+        (function() {
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                document.body.style.display = "block";
+                document.getElementById('login-screen').style.display = "none";
+                // Inicia no primeiro slide
+                window.addEventListener('load', () => {
+                    if (window.Reveal) Reveal.slide(0);
+                });
+            } else {
+                document.body.style.display = "block";
+                setTimeout(() => document.getElementById('password-input').focus(), 100);
+            }
+        })();
 
         function checkPassword() {
             const input = document.getElementById('password-input');
             const error = document.getElementById('error-message');
             
             if (input.value === "century00") {
+                sessionStorage.setItem('authenticated', 'true');
                 // Senha correta: esconde o login com transição
                 const login = document.getElementById('login-screen');
                 login.style.opacity = "0";
