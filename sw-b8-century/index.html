@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software B8 – Programa de Documentação Estruturada (Dinâmico)</title>
+
+    <!-- Fonts -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap">
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+
+    <style>
+        :root {
+            --blue-900: #0A1F3D;
+            --blue-800: #0D2B52;
+            --blue-600: #1A4A94;
+            --blue-500: #2460C1;
+            --orange-500: #F06520;
+            --orange-400: #FF7D38;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: var(--orange-500);
+        }
+
+        .reveal {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0D2B52 0%, #050a14 100%);
+            color: #fff;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4 {
+            font-family: 'Sora', sans-serif;
+            text-transform: none;
+            color: #fff;
+        }
+
+        /* Adjusting sizes to match original */
+        .reveal h1 {
+            font-size: 52px !important;
+        }
+
+        .reveal h2 {
+            font-size: 38px !important;
+        }
+
+        .reveal h3 {
+            font-size: 28px !important;
+        }
+
+        .reveal h4 {
+            font-size: 22px !important;
+        }
+
+        .reveal p,
+        .reveal li {
+            font-size: 20px !important;
+            line-height: 1.6;
+        }
+
+        .reveal section img {
+            border: none;
+            box-shadow: none;
+        }
+
+        /* Layout splits to match original */
+        .split-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            text-align: left;
+        }
+
+        .split-left {
+            flex: 1.3;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .split-right {
+            flex: 0.7;
+            padding: 60px;
+            background: var(--orange-500);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Glassmorphism Cards - Simplified for clarity */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            font-family: 'Sora', sans-serif;
+            font-size: 11px !important;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--orange-400);
+            border: 1px solid rgba(240, 101, 32, 0.4);
+            padding: 6px 16px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            background: rgba(240, 101, 32, 0.05);
+        }
+
+        /* KPI Style */
+        .kpi-box {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .kpi-label {
+            font-size: 13px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 1.0);
+            margin-bottom: 4px;
+        }
+
+        .kpi-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 74px !important;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .kpi-sub {
+            font-size: 15px !important;
+            color: rgba(255, 255, 255, 1.0);
+        }
+
+        /* Timeline */
+        .timeline-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 20px 10px;
+            text-align: center;
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+
+        .timeline-item.active .timeline-line {
+            background: var(--accent);
+        }
+
+        /* SVG Flowchart Animation */
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .flow-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 3s ease forwards;
+        }
+
+        /* Custom Reveal.js controls */
+        .reveal .controls {
+            color: var(--accent);
+        }
+
+        .reveal .progress {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .reveal .progress span {
+            background: var(--accent);
+        }
+
+        /* Header logo */
+        .slide-header {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.9;
+        }
+
+        .logo-text {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.6em;
+            letter-spacing: 2px;
+            color: var(--orange-400);
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Floating Animation */
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        /* Background elements */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(36, 96, 193, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hexagon {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .road-label {
+            position: absolute;
+            width: 220px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+    <div class="bg-glow" style="top: -10%; left: -10%;"></div>
+    <div class="bg-glow" style="bottom: -10%; right: -10%;"></div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: CAPA -->
+            <section data-background-gradient="radial-gradient(circle at 20% 30%, #0D2B52 0%, #050a14 100%)">
+                <div class="split-layout">
+                    <div class="split-left">
+                        <div>
+                            <div class="tag">Apresentação Executiva · Diretoria</div>
+                            <h1 style="margin: 0; font-size: 53px !important; line-height: 1.15;">Programa de <br><span
+                                    style="color: var(--orange-500)">Documentação</span> <br>Estruturada</h1>
+                            <p
+                                style="opacity: 0.9; margin-top: 25px; border-left: 2px solid var(--accent); padding-left: 20px; font-size: 20px !important; max-width: 520px;">
+                                Plano executivo para padronização, continuidade e eficiência técnica do ativo de
+                                software embarcado Software B8.
+                            </p>
+                        </div>
+                        <div style="font-size: 15px !important; opacity: 0.6; margin-top: 30px;">
+                            Maio de 2026 · Engenharia<br>
+                            <strong>Elaborado por: Tiago Gomes</strong>
+                        </div>
+                    </div>
+                    <div class="split-right">
+                        <div class="kpi-box">
+                            <div class="kpi-label">Duração da Iniciativa</div>
+                            <div class="kpi-value">12</div>
+                            <div class="kpi-sub">semanas de execução</div>
+                        </div>
+                        <div class="kpi-box">
+                            <div class="kpi-label">Fases de Entrega</div>
+                            <div class="kpi-value">5</div>
+                            <div class="kpi-sub">fases progressivas</div>
+                        </div>
+                        <p
+                            style="font-size: 16px !important; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 20px; color: rgba(255,255,255,0.9); line-height: 1.6;">
+                            "A documentação do Software B8 deve ser tratada como ativo estratégico de continuidade
+                            operacional."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: OBJETIVO -->
+            <section data-auto-animate>
+                <div class="slide-header">
+                    <span class="logo-text">Software B8 · ESTRUTURA</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">02 / 08</span>
+                </div>
+                <h2 data-id="title">Objetivo da Iniciativa</h2>
+                <p style="font-size: 0.9em; margin-bottom: 40px; color: var(--orange-400)">Criar uma base oficial,
+                    padronizada e versionada de documentação</p>
+
+                <div class="grid-3">
+                    <div class="glass-card fragment fade-up" data-fragment-index="1">
+                        <div style="color: var(--accent); margin-bottom: 15px;"><svg width="32" height="32" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M3 3h18v18H3zM9 9h6m-6 4h6m-6 4h4" />
+                            </svg></div>
+                        <h4 style="font-size: 22px !important;">Consolidar</h4>
+                        <p style="font-size: 18px !important; opacity: 0.7;">Reunir conhecimento disperso em uma
+                            estrutura única e oficial.</p>
+                    </div>
+                    <div class="glass-card fragment fade-up" data-fragment-index="2">
+                        <div style="color: var(--accent); margin-bottom: 15px;"><svg width="32" height="32" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg></div>
+                        <h4 style="font-size: 22px !important;">Camadas</h4>
+                        <p style="font-size: 18px !important; opacity: 0.7;">Separar documentação de produto,
+                            arquitetura, módulos e fluxos.</p>
+                    </div>
+                    <div class="glass-card fragment fade-up" data-fragment-index="3">
+                        <div style="color: var(--accent); margin-bottom: 15px;"><svg width="32" height="32" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                            </svg></div>
+                        <h4 style="font-size: 22px !important;">Sustentar</h4>
+                        <p style="font-size: 18px !important; opacity: 0.7;">Reduzir a dependência de especialistas
+                            únicos.</p>
+                    </div>
+                    <div class="glass-card fragment fade-up" data-fragment-index="4">
+                        <div style="color: var(--accent); margin-bottom: 15px;"><svg width="32" height="32" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg></div>
+                        <h4 style="font-size: 22px !important;">Governança</h4>
+                        <p style="font-size: 18px !important; opacity: 0.7;">Instituir processos formais de atualização
+                            e rastreabilidade.</p>
+                    </div>
+                    <div class="glass-card fragment fade-up" data-fragment-index="5">
+                        <div style="color: var(--accent); margin-bottom: 15px;"><svg width="32" height="32" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 6v6l4 2" />
+                            </svg></div>
+                        <h4 style="font-size: 22px !important;">Onboarding</h4>
+                        <p style="font-size: 18px !important; opacity: 0.7;">Acelerar a integração de novos
+                            desenvolvedores.</p>
+                    </div>
+                    <div class="glass-card fragment fade-up" data-fragment-index="6">
+                        <div style="color: var(--accent); margin-bottom: 15px;"><svg width="32" height="32" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg></div>
+                        <h4 style="font-size: 22px !important;">Evolução</h4>
+                        <p style="font-size: 18px !important; opacity: 0.7;">Aumentar previsibilidade e análise de
+                            impacto.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: ATUAL VS FUTURO -->
+            <section>
+                <div class="slide-header">
+                    <span class="logo-text">Software B8 · TRANSFORMAÇÃO</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">03 / 08</span>
+                </div>
+                <h2>Situação Atual vs Estado Futuro</h2>
+                <div class="grid-2" style="margin-top: 50px;">
+                    <div class="glass-card" style="border-left: 5px solid #ff4444;">
+                        <h3 style="font-size: 0.8em; color: #ff4444; margin-bottom: 30px;">Cenário de Risco (Hoje)</h3>
+                        <ul style="font-size: 22px !important; list-style: none; padding: 0; line-height: 2.0;">
+                            <li style="margin-bottom: 8px;">❌ Documentação dispersa entre arquivos e pastas</li>
+                            <li style="margin-bottom: 8px;">❌ Dependência extrema de "conhecimento oral"</li>
+                            <li style="margin-bottom: 8px;">❌ Entendimento técnico exige leitura do código</li>
+                            <li style="margin-bottom: 8px;">❌ Manutenção informal e sem responsáveis</li>
+                            <li style="margin-bottom: 8px;">❌ Onboarding lento e com risco de interpretação</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card fragment fade-left" data-fragment-index="1"
+                        style="border-left: 5px solid #00C851;">
+                        <h3 style="font-size: 0.8em; color: #00C851; margin-bottom: 30px;">Ativo Estratégico (Futuro)
+                        </h3>
+                        <ul style="font-size: 22px !important; list-style: none; padding: 0; line-height: 2.0;">
+                            <li style="margin-bottom: 8px;">✅ Base única versionada no repositório</li>
+                            <li style="margin-bottom: 8px;">✅ Conteúdo atualizado e rastreável</li>
+                            <li style="margin-bottom: 8px;">✅ Conhecimento institucionalizado e acessível</li>
+                            <li style="margin-bottom: 8px;">✅ Mapa claro de arquitetura e fluxos críticos</li>
+                            <li style="margin-bottom: 8px;">✅ Governança com responsáveis definidos</li>
+                            <li style="margin-bottom: 8px;">✅ Onboarding acelerado e estruturado</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: ETAPAS -->
+            <section>
+                <div class="slide-header">
+                    <span class="logo-text">Software B8 · ROADMAP</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">04 / 08</span>
+                </div>
+                <h2>Etapas da Iniciativa</h2>
+                <div style="margin-top: 60px;">
+                    <div class="timeline-container">
+                        <div class="timeline-item fragment fade-up" data-fragment-index="1">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-line"></div>
+                            <h4 style="font-size: 0.6em; margin-bottom: 10px;">Fase 1</h4>
+                            <p style="font-size: 18px !important; opacity: 0.7;">Alinhamento e <br>Kick-off</p>
+                        </div>
+                        <div class="timeline-item fragment fade-up" data-fragment-index="2">
+                            <div class="timeline-dot"
+                                style="background: var(--blue-500); box-shadow: 0 0 15px var(--blue-500);"></div>
+                            <div class="timeline-line"></div>
+                            <h4 style="font-size: 0.6em; margin-bottom: 10px;">Fase 2</h4>
+                            <p style="font-size: 18px !important; opacity: 0.7;">Diagnóstico e <br>Inventário</p>
+                        </div>
+                        <div class="timeline-item fragment fade-up" data-fragment-index="3">
+                            <div class="timeline-dot"
+                                style="background: var(--blue-500); box-shadow: 0 0 15px var(--blue-500);"></div>
+                            <div class="timeline-line"></div>
+                            <h4 style="font-size: 0.6em; margin-bottom: 10px;">Fase 3</h4>
+                            <p style="font-size: 18px !important; opacity: 0.7;">Estruturação <br>da Base</p>
+                        </div>
+                        <div class="timeline-item fragment fade-up" data-fragment-index="4">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-line"></div>
+                            <h4 style="font-size: 0.6em; margin-bottom: 10px;">Fase 4</h4>
+                            <p style="font-size: 18px !important; opacity: 0.7;">Documentação <br>Técnica</p>
+                        </div>
+                        <div class="timeline-item fragment fade-up" data-fragment-index="5">
+                            <div class="timeline-dot"></div>
+                            <h4 style="font-size: 0.6em; margin-bottom: 10px;">Fase 5</h4>
+                            <p style="font-size: 18px !important; opacity: 0.7;">Governança e <br>Continuidade</p>
+                        </div>
+                    </div>
+                    <div class="glass-card fragment fade-in"
+                        style="margin-top: 40px; text-align: left; border-left: 4px solid var(--accent);">
+                        <p style="font-size: 0.6em; margin: 0;"><strong>Meta:</strong> Em 12 semanas, entregar a base
+                            oficial publicada com conteúdo técnico prioritário e governança implantada.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: FLUXO DE TRABALHO -->
+            <section>
+                <div class="slide-header">
+                    <span class="logo-text">Software B8 · PROCESSO</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">05 / 08</span>
+                </div>
+                <h2>Fluxo de Trabalho</h2>
+                <div style="position: relative; width: 100%; height: 500px; margin-top: 20px;">
+                    <!-- SVG Wavy Road -->
+                    <svg width="100%" height="100%" viewBox="0 0 1100 500"
+                        style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 0;">
+                        <path
+                            d="M 50 350 C 150 350 200 100 350 100 C 500 100 550 350 700 350 C 850 350 900 100 1050 100"
+                            stroke="rgba(255,255,255,0.1)" stroke-width="6" fill="none" stroke-dasharray="12 12" />
+                        <path class="fragment" data-fragment-index="1"
+                            d="M 50 350 C 150 350 200 100 350 100 C 500 100 550 350 700 350 C 850 350 900 100 1050 100"
+                            stroke="url(#roadGradient)" stroke-width="6" fill="none" stroke-linecap="round"
+                            style="filter: drop-shadow(0 0 8px var(--blue-500));" />
+                        <defs>
+                            <linearGradient id="roadGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:var(--blue-500);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:var(--orange-500);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                    <!-- STEP 1: ENTRADAS (Bottom) -->
+                    <div class="road-label fragment fade-up" data-fragment-index="1" style="left: 0px; top: 280px;">
+                        <div class="hexagon"
+                            style="background: var(--blue-600); width: 70px; height: 80px; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 0 20px rgba(36,96,193,0.5);">
+                            📥</div>
+                        <h4 style="font-size: 22px !important; color: #fff; font-weight: 700; margin-bottom: 8px;">
+                            ENTRADAS</h4>
+                        <p style="font-size: 18px !important; line-height: 1.4; color: rgba(255,255,255,0.8);">Código,
+                            docs legados, especialistas e PRDs.</p>
+                    </div>
+
+                    <!-- STEP 2: DIAGNÓSTICO (Top) -->
+                    <div class="road-label fragment fade-down" data-fragment-index="2" style="left: 240px; top: 20px;">
+                        <div class="hexagon"
+                            style="background: var(--blue-600); width: 70px; height: 80px; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 0 20px rgba(36,96,193,0.5);">
+                            🔍</div>
+                        <h4 style="font-size: 22px !important; color: #fff; font-weight: 700; margin-bottom: 8px;">
+                            DIAGNÓSTICO</h4>
+                        <p style="font-size: 18px !important; line-height: 1.4; color: rgba(255,255,255,0.8);">
+                            Inventário, classificação e mapa de gaps.</p>
+                    </div>
+
+                    <!-- STEP 3: ESTRUTURA (Bottom) -->
+                    <div class="road-label fragment fade-up" data-fragment-index="3" style="left: 440px; top: 280px;">
+                        <div class="hexagon"
+                            style="background: var(--blue-600); width: 70px; height: 80px; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 0 20px rgba(36,96,193,0.5);">
+                            🏗️</div>
+                        <h4 style="font-size: 22px !important; color: #fff; font-weight: 700; margin-bottom: 8px;">
+                            ESTRUTURA</h4>
+                        <p style="font-size: 18px !important; line-height: 1.4; color: rgba(255,255,255,0.8);">Base
+                            oficial, modelos e Git versionado.</p>
+                    </div>
+
+                    <!-- STEP 4: EXECUÇÃO (Top) -->
+                    <div class="road-label fragment fade-down" data-fragment-index="4" style="left: 640px; top: 20px;">
+                        <div class="hexagon"
+                            style="background: var(--orange-600); width: 70px; height: 80px; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 0 20px rgba(240,101,32,0.5);">
+                            ⚙️</div>
+                        <h4
+                            style="font-size: 22px !important; color: var(--orange-400); font-weight: 700; margin-bottom: 8px;">
+                            EXECUÇÃO</h4>
+                        <p style="font-size: 18px !important; line-height: 1.4; color: rgba(255,255,255,0.8);">
+                            Arquitetura, fluxos e tasks técnicas.</p>
+                    </div>
+
+                    <!-- STEP 5: GOVERNANÇA (Bottom) -->
+                    <div class="road-label fragment fade-up" data-fragment-index="5" style="left: 840px; top: 280px;">
+                        <div class="hexagon"
+                            style="background: var(--orange-600); width: 70px; height: 80px; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 0 20px rgba(240,101,32,0.5);">
+                            🛡️</div>
+                        <h4
+                            style="font-size: 22px !important; color: var(--orange-400); font-weight: 700; margin-bottom: 8px;">
+                            GOVERNANÇA</h4>
+                        <p style="font-size: 18px !important; line-height: 1.4; color: rgba(255,255,255,0.8);">Política
+                            de PR, Checklist e Indicadores.</p>
+                    </div>
+
+                    <!-- FINAL GOAL -->
+                    <div class="fragment zoom-in" data-fragment-index="6"
+                        style="position: absolute; right: 20px; top: 70px; text-align: center;">
+                        <div
+                            style="background: var(--orange-500); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 0 30px var(--orange-500); border: 3px solid #fff; margin: 0 auto 10px;">
+                            🚀</div>
+                        <div
+                            style="font-size: 14px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px;">
+                            BASE OFICIAL</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: CRONOGRAMA -->
+            <section>
+                <div class="slide-header">
+                    <span class="logo-text">Software B8 · TIMELINE</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">06 / 08</span>
+                </div>
+                <h2>Cronograma Executivo</h2>
+                <div class="glass-card" style="margin-top: 40px; padding: 0; overflow: hidden;">
+                    <table style="width: 100%; font-size: 20px !important; border-collapse: collapse;">
+                        <thead style="background: rgba(255,255,255,0.05); color: var(--orange-400);">
+                            <tr>
+                                <th style="padding: 20px;">Período</th>
+                                <th style="padding: 20px;">Foco</th>
+                                <th style="padding: 20px;">Entrega Principal</th>
+                            </tr>
+                        </thead>
+                        <tbody style="line-height: 2;">
+                            <tr class="fragment fade-in" style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 15px; color: var(--accent); font-weight: 700;">Semana 1</td>
+                                <td style="padding: 15px;">Preparação e Alinhamento</td>
+                                <td style="padding: 15px;">Kick-off + Responsável</td>
+                            </tr>
+                            <tr class="fragment fade-in" style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 15px; color: var(--accent); font-weight: 700;">Semanas 2–3</td>
+                                <td style="padding: 15px;">Diagnóstico e Inventário</td>
+                                <td style="padding: 15px;">Mapa de Gaps Documentais</td>
+                            </tr>
+                            <tr class="fragment fade-in" style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 15px; color: var(--accent); font-weight: 700;">Semanas 4–6</td>
+                                <td style="padding: 15px;">Estruturação da Base</td>
+                                <td style="padding: 15px;">Portal publicado no Git</td>
+                            </tr>
+                            <tr class="fragment fade-in" style="border-bottom: 1px solid var(--glass-border);">
+                                <td style="padding: 15px; color: var(--accent); font-weight: 700;">Semanas 7–10</td>
+                                <td style="padding: 15px;">Conteúdo Técnico Prioritário</td>
+                                <td style="padding: 15px;">Arquitetura e Fluxos Críticos</td>
+                            </tr>
+                            <tr class="fragment fade-in">
+                                <td style="padding: 15px; color: var(--accent); font-weight: 700;">Semanas 11–12</td>
+                                <td style="padding: 15px;">Governança</td>
+                                <td style="padding: 15px;">Política de Continuidade</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section>
+                <div class="slide-header">
+                    <span class="logo-text">Software B8 · IA & RECURSOS</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">07 / 08</span>
+                </div>
+                <h2>Recursos e IA como Acelerador</h2>
+                <div class="grid-2" style="margin-top: 40px; text-align: left;">
+                    <div class="glass-card fragment fade-right" data-fragment-index="1">
+                        <!-- Left Side: Sequential Reveal -->
+                        <div>
+                            <h4 style="font-size: 22px !important; color: var(--accent); margin-bottom: 20px;">Equipe
+                                Necessária</h4>
+                            <ul style="font-size: 18px !important; list-style: none; padding: 0; line-height: 2.2;">
+                                <li style="margin-bottom: 8px;">👤 <strong>Patrocinador executivo</strong></li>
+                                <li style="margin-bottom: 8px;">👤 <strong>Responsável pela iniciativa</strong></li>
+                                <li style="margin-bottom: 8px;">👤 <strong>Líder técnico documental</strong></li>
+                                <li style="margin-bottom: 8px;">👥 <strong>Especialistas técnicos</strong> (sob demanda)
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="fragment fade-right" data-fragment-index="2" style="margin-top: 25px;">
+                            <h4 style="font-size: 22px !important; color: var(--accent); margin-bottom: 15px;">
+                                Ferramentas
+                            </h4>
+                            <div
+                                style="font-size: 17px !important; background: rgba(240,101,32,0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                                <span style="color: var(--accent); font-weight: 700;">Disponíveis:</span> Redmine ·
+                                Markdown · Git · GitLab
+                            </div>
+                            <div
+                                style="font-size: 17px !important; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
+                                <span style="color: rgba(255,255,255,0.6); font-weight: 700;">Apoio:</span> Apresentação
+                                ·
+                                Mermaid · I.A Pago
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card fragment fade-left" data-fragment-index="3"
+                        style="border-top: 3px solid var(--orange-500);">
+                        <h4 style="font-size: 22px !important; margin-bottom: 20px;">IA como Acelerador da Execução</h4>
+                        <div style="font-size: 18px !important; line-height: 1.6;">
+                            <div class="fragment fade-in" data-fragment-index="4"
+                                style="margin-bottom: 12px; display: flex; gap: 10px;">
+                                <div
+                                    style="background: var(--accent); min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px;">
+                                    1</div>
+                                <div><strong>Evidências técnicas</strong> — código, PRDs, registros e decisões
+                                    arquiteturais como insumo</div>
+                            </div>
+                            <div class="fragment fade-in" data-fragment-index="5"
+                                style="margin-bottom: 12px; display: flex; gap: 10px;">
+                                <div
+                                    style="background: var(--accent); min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px;">
+                                    2</div>
+                                <div><strong>IA gera rascunho</strong> — organiza, resume, estrutura e acelera primeiras
+                                    versões</div>
+                            </div>
+                            <div class="fragment fade-in" data-fragment-index="6"
+                                style="margin-bottom: 12px; display: flex; gap: 10px;">
+                                <div
+                                    style="background: var(--accent); min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px;">
+                                    3</div>
+                                <div><strong>Validação humana</strong> — revisão obrigatória pela liderança técnica do
+                                    domínio</div>
+                            </div>
+                            <div class="fragment fade-in" data-fragment-index="7"
+                                style="margin-bottom: 12px; display: flex; gap: 10px;">
+                                <div
+                                    style="background: var(--accent); min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px;">
+                                    4</div>
+                                <div><strong>Documento oficial</strong> — publicado versionado no repositório com
+                                    responsável definido</div>
+                            </div>
+                        </div>
+
+                        <div class="fragment zoom-in" data-fragment-index="8"
+                            style="margin-top: 20px; padding: 12px; background: rgba(240,101,32,0.15); border-radius: 8px; font-size: 18px !important; line-height: 1.5; color: var(--orange-400);">
+                            <strong>Princípio inegociável:</strong> a IA organiza e acelera, mas nunca substitui a
+                            validação técnica humana. Todo documento publicado é de responsabilidade do engenheiro
+                            revisor.
+                        </div>
+                        <div class="fragment highlight-orange" data-fragment-index="9"
+                            style="margin-top: 15px; padding: 12px; background: rgba(36,96,193,0.1); border-radius: 8px; font-size: 17px !important; color: #fff;">
+                            <strong>Ganho estimado:</strong> redução de <strong>40–60%</strong> no tempo de elaboração
+                            de rascunhos documentais.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: CONCLUSÃO -->
+            <section data-background-color="#0A1F3D">
+                <div class="slide-header">
+                    <span class="logo-text" style="color: #fff;">Software B8 · DECISÃO</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">08 / 08</span>
+                </div>
+                <h2 style="color: var(--orange-500);">Conclusão e Próximos Passos</h2>
+                <div class="grid-2" style="margin-top: 50px; text-align: left;">
+                    <div style="align-self: center;">
+                        <p
+                            style="font-size: 34px !important; font-weight: 700; line-height: 1.3; border-left: 6px solid var(--orange-500); padding-left: 25px; margin-bottom: 30px;">
+                            Documentar o <span style="color: #fff;">Software B8</span> de forma estruturada significa
+                            <span style="color: var(--orange-400)">reduzir risco</span>, <span
+                                style="color: var(--orange-400)">ganhar eficiência</span> e aumentar a capacidade de
+                            evolução com <span style="color: var(--orange-400)">previsibilidade</span>.
+                        </p>
+                        <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px;">
+                            <p style="font-size: 20px !important; opacity: 0.85; line-height: 1.7; color: #fff;">
+                                O investimento principal não está em novas ferramentas, mas em organização, padronização
+                                e consolidação do conhecimento técnico como ativo da empresa. Com 12 semanas, é possível
+                                transformar documentação dispersa em uma base oficial e auditável.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 40px; background: rgba(240,101,32,0.05);">
+                        <h4
+                            style="font-size: 0.6em; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; color: var(--orange-400);">
+                            Deliberações Solicitadas</h4>
+                        <div style="font-size: 18px !important; line-height: 2.0;">
+                            <div style="margin-bottom: 15px;"><strong>✅ Aprovação formal</strong><br><span
+                                    style="opacity: 0.6;">Reconhecer documentação como ativo estratégico</span></div>
+                            <div style="margin-bottom: 15px;"><strong>✅ Patrocinador Executivo</strong><br><span
+                                    style="opacity: 0.6;">Definição de responsável de alto nível</span></div>
+                            <div style="margin-bottom: 15px;"><strong>✅ Apoio da Liderança Técnica</strong><br><span
+                                    style="opacity: 0.6;">Disponibilidade para validações críticas</span></div>
+                            <div style="margin-bottom: 15px;"><strong>✅ Início imediato</strong><br><span
+                                    style="opacity: 0.6;">Kick-off na Semana 1 com equipe definida</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: RESUMO COMPACTO -->
+            <section data-background-gradient="linear-gradient(135deg, #050a14 0%, #0D2B52 100%)">
+                <div class="slide-header">
+                    <span class="logo-text" style="color: var(--orange-400);">Software B8 · RESUMO</span>
+                    <span style="font-size: 0.5em; opacity: 0.5;">09 / 09</span>
+                </div>
+                <h2 style="color: #fff; margin-bottom: 50px;">Resumo Executivo do Projeto</h2>
+
+                <div class="grid-2" style="gap: 40px; text-align: left;">
+                    <div class="glass-card" style="border-top: 4px solid var(--accent);">
+                        <h4
+                            style="color: var(--accent); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.6em;">
+                            Cronograma</h4>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="font-size: 64px; color: #fff; font-weight: 700;">12</div>
+                            <div style="font-size: 24px; line-height: 1.2; color: rgba(255,255,255,0.8);">Semanas
+                                para<br><strong>Execução Total</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card" style="border-top: 4px solid var(--orange-500);">
+                        <h4
+                            style="color: var(--orange-400); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.6em;">
+                            Recursos Essenciais</h4>
+                        <div style="font-size: 20px !important; line-height: 1.6;">
+                            <div style="margin-bottom: 12px; display: flex; gap: 15px; align-items: center;">
+                                <div
+                                    style="background: var(--accent); min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff;">
+                                    1</div>
+                                <div><strong>Responsável pela Governança</strong></div>
+                            </div>
+                            <div style="margin-bottom: 12px; display: flex; gap: 15px; align-items: center;">
+                                <div
+                                    style="background: var(--accent); min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff;">
+                                    2</div>
+                                <div><strong>Líder Técnico Documental</strong></div>
+                            </div>
+                            <div style="margin-bottom: 12px; display: flex; gap: 15px; align-items: center;">
+                                <div
+                                    style="background: var(--accent); min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff;">
+                                    3</div>
+                                <div><strong>Líderes Técnicos por Domínio</strong></div>
+                            </div>
+                            <div style="margin-bottom: 12px; display: flex; gap: 15px; align-items: center;">
+                                <div
+                                    style="background: var(--accent); min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff;">
+                                    4</div>
+                                <div><strong>Acesso a I.A Paga</strong> (Acelerador)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fragment fade-up"
+                    style="margin-top: 50px; padding: 25px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                    <p style="font-size: 24px !important; margin: 0; color: var(--orange-400); font-weight: 700;">
+                        Transformando documentação de "custo operacional" em "ativo estratégico".
+                    </p>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: AGRADECIMENTO -->
+            <section data-background-color="#050a14">
+                <div class="slide-header">
+                    <span class="logo-text" style="color: var(--orange-400);">Software B8 · FIM</span>
+                </div>
+                <h1 style="font-size: 80px !important; color: #fff; margin-bottom: 20px;">Obrigado!</h1>
+                <p style="font-size: 24px !important; opacity: 0.6; color: var(--accent);">Tiago Gomes - Engenharia</p>
+
+                <div
+                    style="margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); display: inline-block;">
+                    <div
+                        style="font-family: Sora; font-weight: 700; color: #fff; font-size: 18px; letter-spacing: 2px;">
+                        SOFTWARE B8</div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            margin: 0.1,
+            minScale: 1,
+            maxScale: 1,
+            hash: true,
+            center: true,
+            mouseWheel: true,
+            transition: 'slide',
+            transitionSpeed: 'fast',
+            backgroundTransition: 'fade',
+            autoAnimateEasing: 'ease-out',
+            autoAnimateDuration: 0.8,
+            controls: true,
+            progress: true,
+            slideNumber: false,
+            plugins: []
+        });
+
+        // Background interactivity
+        document.addEventListener('mousemove', (e) => {
+            const glows = document.querySelectorAll('.bg-glow');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            glows[0].style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+            glows[1].style.transform = `translate(${-x * 50}px, ${-y * 50}px)`;
+        });
+
+        // Particles.js Config
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#F06520" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#2460C1", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }, "resize": true },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.4 } } }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+
+</html>
