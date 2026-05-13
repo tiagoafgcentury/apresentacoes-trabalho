@@ -331,10 +331,13 @@
             
             document.body.innerHTML = `
                 <div style="text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; backdrop-filter: blur(10px);">
-                    <div style="font-size: 64px; margin-bottom: 20px;">🔒</div>
-                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 10px;">Acesso Negado</div>
-                    <div style="opacity: 0.6; font-size: 18px; margin-bottom: 30px;">A senha informada está incorreta.</div>
-                    <button onclick="location.reload()" style="padding: 12px 24px; background: #F06520; border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">Tentar Novamente</button>
+                    <div style="font-size: 64px; margin-bottom: 20px;">🔑</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 10px;">Senha Incorreta</div>
+                    <div style="opacity: 0.6; font-size: 18px; margin-bottom: 30px;">A senha digitada está incorreta. Por favor, tente novamente.</div>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="location.reload()" style="padding: 12px 24px; background: #F06520; border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer; transition: transform 0.2s;">Tentar Novamente</button>
+                        <button onclick="history.back()" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; font-weight: 700; cursor: pointer; transition: background 0.2s;">Voltar</button>
+                    </div>
                 </div>
             `;
             window.stop();
