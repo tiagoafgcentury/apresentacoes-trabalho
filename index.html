@@ -293,8 +293,9 @@
   </div>
 
   <script>
-      // Mostrar o corpo do documento imediatamente (a tela de login cobre tudo)
+      // Mostrar o corpo do documento imediatamente e focar no input
       document.body.style.display = "block";
+      setTimeout(() => document.getElementById('password-input').focus(), 100);
 
       function checkPassword() {
           const input = document.getElementById('password-input');

@@ -381,8 +381,9 @@
     </div>
 
     <script>
-        // Mostrar o corpo do documento imediatamente (a tela de login cobre tudo)
+        // Mostrar o corpo do documento imediatamente e focar no input
         document.body.style.display = "block";
+        setTimeout(() => document.getElementById('password-input').focus(), 100);
 
         function checkPassword() {
             const input = document.getElementById('password-input');
@@ -395,8 +396,10 @@
                 login.style.transition = "opacity 0.5s ease";
                 setTimeout(() => {
                     login.style.display = "none";
-                    // Inicializa o Reveal.js apenas após o login se necessário, 
-                    // mas aqui ele já carrega no fundo.
+                    // Garante que a apresentação comece no início
+                    if (window.Reveal) {
+                        Reveal.slide(0);
+                    }
                 }, 500);
             } else {
                 // Senha errada: mostra erro e animação de vibração
