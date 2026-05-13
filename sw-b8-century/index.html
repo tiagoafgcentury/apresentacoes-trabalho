@@ -315,76 +315,30 @@
 <body style="display:none;">
 
     <script>
-        (function() {
-            const sp = prompt("Digite a senha:");
-            if (sp === "century00") {
-                document.body.style.display = "block";
-            } else {
-                // Se a senha estiver errada, paramos o carregamento e limpamos o documento
-                document.open();
-                document.write(`
-                    <!DOCTYPE html>
-                    <html lang="pt-BR">
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Acesso Negado</title>
-                        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap">
-                        <style>
-                            body {
-                                background: radial-gradient(circle at center, #0D2B52 0%, #050a14 100%);
-                                color: white;
-                                height: 100vh;
-                                width: 100vw;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                font-family: 'Sora', sans-serif;
-                                flex-direction: column;
-                                margin: 0;
-                                overflow: hidden;
-                            }
-                            .container {
-                                text-align: center;
-                                padding: 40px;
-                                background: rgba(255, 255, 255, 0.05);
-                                border: 1px solid rgba(255, 255, 255, 0.1);
-                                border-radius: 24px;
-                                backdrop-filter: blur(10px);
-                                box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-                            }
-                            .lock { font-size: 64px; margin-bottom: 20px; filter: drop-shadow(0 0 10px #F06520); }
-                            .title { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
-                            .msg { opacity: 0.6; font-size: 18px; }
-                            .btn {
-                                margin-top: 30px;
-                                padding: 12px 24px;
-                                background: #F06520;
-                                border: none;
-                                border-radius: 8px;
-                                color: white;
-                                font-weight: 700;
-                                cursor: pointer;
-                                text-decoration: none;
-                                display: inline-block;
-                                transition: transform 0.2s;
-                            }
-                            .btn:hover { transform: scale(1.05); }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="lock">🔒</div>
-                            <div class="title">Acesso Negado</div>
-                            <div class="msg">A senha informada está incorreta.</div>
-                            <button class="btn" onclick="location.reload()">Tentar Novamente</button>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                document.close();
-                window.stop(); // Garante que o parser original pare imediatamente
-            }
-        })();
+        const sp = prompt("Digite a senha:");
+        if (sp === "century00") {
+            document.body.style.display = "block";
+        } else {
+            document.body.style.display = "flex";
+            document.body.style.flexDirection = "column";
+            document.body.style.justifyContent = "center";
+            document.body.style.alignItems = "center";
+            document.body.style.height = "100vh";
+            document.body.style.margin = "0";
+            document.body.style.background = "radial-gradient(circle at center, #0D2B52 0%, #050a14 100%)";
+            document.body.style.color = "white";
+            document.body.style.fontFamily = "sans-serif";
+            
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; backdrop-filter: blur(10px);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🔒</div>
+                    <div style="font-size: 32px; font-weight: 700; margin-bottom: 10px;">Acesso Negado</div>
+                    <div style="opacity: 0.6; font-size: 18px; margin-bottom: 30px;">A senha informada está incorreta.</div>
+                    <button onclick="location.reload()" style="padding: 12px 24px; background: #F06520; border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">Tentar Novamente</button>
+                </div>
+            `;
+            window.stop();
+        }
     </script>
     <div id="particles-js"></div>
     <div class="bg-glow" style="top: -10%; left: -10%;"></div>
