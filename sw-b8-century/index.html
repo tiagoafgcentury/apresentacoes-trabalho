@@ -921,6 +921,23 @@
             "retina_detect": true
         });
     </script>
+	<script>
+function entrar() {
+
+  const senha = document.getElementById('senha').value;
+
+  if (senha === 'century00') {
+
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'block';
+
+  } else {
+
+    alert('Senha incorreta');
+
+  }
+}
+</script>
 </body>
 
 </html>
