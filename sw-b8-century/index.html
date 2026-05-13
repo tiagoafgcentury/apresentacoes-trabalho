@@ -312,7 +312,40 @@
     </style>
 </head>
 
-<body>
+<body style="display:none;">
+
+<script>
+
+const senha = prompt("Digite a senha:");
+
+if (senha === "century00") {
+
+    document.body.style.display = "block";
+
+} else {
+
+    document.body.innerHTML = `
+        <div style="
+            background:#111;
+            color:white;
+            height:100vh;
+            width:100vw;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-family:Arial;
+            font-size:32px;
+            flex-direction:column;
+        ">
+            <div style="margin-bottom:20px;">🔒</div>
+            <div>Acesso negado</div>
+        </div>
+    `;
+
+    document.body.style.display = "flex";
+}
+
+</script>
     <div id="particles-js"></div>
     <div class="bg-glow" style="top: -10%; left: -10%;"></div>
     <div class="bg-glow" style="bottom: -10%; right: -10%;"></div>
@@ -921,23 +954,7 @@
             "retina_detect": true
         });
     </script>
-	<script>
-function entrar() {
 
-  const senha = document.getElementById('senha').value;
-
-  if (senha === 'century00') {
-
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('conteudo').style.display = 'block';
-
-  } else {
-
-    alert('Senha incorreta');
-
-  }
-}
-</script>
 </body>
 
 </html>
