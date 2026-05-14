@@ -7,7 +7,8 @@
 
   <title>Apresentações Estratégicas</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
   <style>
     * {
@@ -126,11 +127,9 @@
       width: 6px;
       height: 100%;
 
-      background: linear-gradient(
-        to bottom,
-        #F06520,
-        #ff9a5a
-      );
+      background: linear-gradient(to bottom,
+          #F06520,
+          #ff9a5a);
     }
 
     .card:hover {
@@ -253,13 +252,20 @@
       z-index: 10000;
       font-family: 'Inter', sans-serif;
   ">
-      <div style="width: 420px; text-align: center; padding: 45px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box;">
-          <div style="font-size: 50px; margin-bottom: 25px; filter: drop-shadow(0 0 10px #F06520); display: flex; justify-content: center; width: 100%;">🔑</div>
-          <h2 style="margin-bottom: 12px; font-size: 28px; color: #ffffff !important; font-weight: 700; width: 100%; margin-top: 0;">Acesso Restrito</h2>
-          <p style="opacity: 0.6; font-size: 16px; margin-bottom: 35px; color: #ffffff !important; width: 100%; line-height: 1.4;">Acesse o portal de apresentações corporativas.</p>
-          
-          <div style="width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center;">
-              <input type="password" id="password-input" placeholder="Senha de acesso" style="
+    <div
+      style="width: 420px; text-align: center; padding: 45px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box;">
+      <div
+        style="font-size: 50px; margin-bottom: 25px; filter: drop-shadow(0 0 10px #F06520); display: flex; justify-content: center; width: 100%;">
+        🔑</div>
+      <h2
+        style="margin-bottom: 12px; font-size: 28px; color: #ffffff !important; font-weight: 700; width: 100%; margin-top: 0;">
+        Acesso Restrito</h2>
+      <p
+        style="opacity: 0.6; font-size: 16px; margin-bottom: 35px; color: #ffffff !important; width: 100%; line-height: 1.4;">
+        Acesse o portal de apresentações corporativas.</p>
+
+      <div style="width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center;">
+        <input type="password" id="password-input" placeholder="Senha de acesso" style="
                   width: 100%;
                   padding: 14px;
                   background: rgba(255,255,255,0.05);
@@ -273,10 +279,12 @@
                   transition: border-color 0.3s;
                   box-sizing: border-box !important;
               ">
-              
-              <div id="error-message" style="color: #ff4444 !important; font-size: 14px; margin-bottom: 20px; display: none; width: 100%;">Senha incorreta. Tente novamente.</div>
-              
-              <button onclick="checkPassword()" style="
+
+        <div id="error-message"
+          style="color: #ff4444 !important; font-size: 14px; margin-bottom: 20px; display: none; width: 100%;">Senha
+          incorreta. Tente novamente.</div>
+
+        <button onclick="checkPassword()" style="
                   width: 100%;
                   padding: 14px;
                   background: #F06520;
@@ -288,58 +296,72 @@
                   cursor: pointer;
                   transition: transform 0.2s, background 0.3s;
               ">Entrar no Portal</button>
-          </div>
       </div>
+    </div>
   </div>
 
-    <script>
-        // Sistema de Sessão Única (SSO)
-        (function() {
-            if (sessionStorage.getItem('authenticated') === 'true') {
-                document.body.style.display = "block";
-                document.getElementById('login-screen').style.display = "none";
-            } else {
-                document.body.style.display = "block";
-                setTimeout(() => document.getElementById('password-input').focus(), 100);
-            }
-        })();
+  <script>
+    // Sistema de Sessão Única (SSO)
+    (function () {
+      if (sessionStorage.getItem('authenticated') === 'true') {
+        document.body.style.display = "block";
+        document.getElementById('login-screen').style.display = "none";
+      } else {
+        document.body.style.display = "block";
+        setTimeout(() => document.getElementById('password-input').focus(), 100);
+      }
+    })();
 
-        function checkPassword() {
-            const input = document.getElementById('password-input');
-            const error = document.getElementById('error-message');
-            
-            if (input.value === "century00") {
-                sessionStorage.setItem('authenticated', 'true');
-                const login = document.getElementById('login-screen');
-                login.style.opacity = "0";
-                login.style.transition = "opacity 0.5s ease";
-                setTimeout(() => {
-                    login.style.display = "none";
-                }, 500);
-            } else {
-                error.style.display = "block";
-                input.style.borderColor = "#ff4444";
-                input.classList.add('shake');
-                setTimeout(() => input.classList.remove('shake'), 500);
-                input.value = "";
-                input.focus();
-            }
-        }
+    function checkPassword() {
+      const input = document.getElementById('password-input');
+      const error = document.getElementById('error-message');
 
-      document.getElementById('password-input').addEventListener('keypress', function (e) {
-          if (e.key === 'Enter') {
-              checkPassword();
-          }
-      });
+      if (input.value === "century00") {
+        sessionStorage.setItem('authenticated', 'true');
+        const login = document.getElementById('login-screen');
+        login.style.opacity = "0";
+        login.style.transition = "opacity 0.5s ease";
+        setTimeout(() => {
+          login.style.display = "none";
+        }, 500);
+      } else {
+        error.style.display = "block";
+        input.style.borderColor = "#ff4444";
+        input.classList.add('shake');
+        setTimeout(() => input.classList.remove('shake'), 500);
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    document.getElementById('password-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
   </script>
 
   <style>
-      @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          75% { transform: translateX(10px); }
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
       }
-      .shake { animation: shake 0.2s ease-in-out 0; animation-iteration-count: 2; }
+
+      25% {
+        transform: translateX(-10px);
+      }
+
+      75% {
+        transform: translateX(10px);
+      }
+    }
+
+    .shake {
+      animation: shake 0.2s ease-in-out 0;
+      animation-iteration-count: 2;
+    }
   </style>
 
   <div class="container">
@@ -364,7 +386,7 @@
 
       <a class="card" href="./sw-b8-century/">
 
-        <h2>Programa de Documentação Softare B8</h2>
+        <h2>Programa de Documentação Software B8</h2>
 
         <p>
           Plano executivo para estruturação documental, governança técnica e padronização operacional.
@@ -372,7 +394,7 @@
 
       </a>
 
-      
+
 
     </div>
 
